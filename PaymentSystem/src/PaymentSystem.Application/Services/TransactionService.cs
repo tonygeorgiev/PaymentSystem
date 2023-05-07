@@ -31,6 +31,16 @@ namespace PaymentSystem.Application.Services
 
         public async Task AddTransactionAsync(Transaction transaction)
         {
+            if (transaction.ReferencedTransactionId.HasValue)
+            {
+                var referencedTransaction = await _transactionRepository.GetByIdAsync(transaction.ReferencedTransactionId.Value);
+
+                if (referencedTransaction == null || (referencedTransaction.Status != TransactionStatus.Approved && referencedTransaction.Status != TransactionStatus.Refunded))
+                {
+                    transaction.Status = TransactionStatus.Error;
+                }
+            }
+
             await _transactionRepository.AddAsync(transaction);
             await _transactionRepository.SaveAsync();
         }

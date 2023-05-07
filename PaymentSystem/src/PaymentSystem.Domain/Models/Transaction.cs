@@ -12,7 +12,7 @@ public class Transaction : Entity<Guid>
 {
     public Transaction()
     {
-        this.Id= Guid.NewGuid();
+        this.Id = Guid.NewGuid();
     }
 
     [Required]
@@ -29,9 +29,9 @@ public class Transaction : Entity<Guid>
     [Required, MaxLength(20)]
     public string CustomerPhone { get; set; }
 
-    public int MerchantId { get; set; }
+    public Guid MerchantId { get; set; }
     public Merchant Merchant { get; set; }
     public TransactionType TransactionType { get; set; }
-    public int? ReferencedTransactionId { get; set; }
+    public Guid? ReferencedTransactionId { get; set; }
     public Transaction ReferencedTransaction { get; set; }
 }

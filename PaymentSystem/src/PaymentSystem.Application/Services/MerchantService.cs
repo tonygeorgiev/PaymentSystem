@@ -1,5 +1,6 @@
 ﻿using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
+using PaymentSystem.Infrastructure.Repositories;
 using PaymentSystem.Infrastructure.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace PaymentSystem.Application.Services
     public class MerchantService : IMerchantService
     {
         private readonly IMerchantRepository _merchantRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
-        public MerchantService(IMerchantRepository merchantRepository)
+        public MerchantService(IMerchantRepository merchantRepository, ITransactionRepository transactionRepository)
         {
             _merchantRepository = merchantRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public async Task<IEnumerable<Merchant>> GetAllMerchantsAsync()
@@ -42,6 +45,13 @@ namespace PaymentSystem.Application.Services
 
         public async Task DeleteMerchantAsync(Merchant merchant)
         {
+            var hasRelatedTransactions = await _transactionRepository.AnyAsync(t => t.MerchantId == merchant.Id);
+
+            if (hasRelatedTransactions)
+            {
+                throw new InvalidOperationException("Cannot delete a merchant with related payment transactions.");
+            }
+
             _merchantRepository.Delete(merchant);
             await _merchantRepository.SaveAsync();
         }
