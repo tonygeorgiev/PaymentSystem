@@ -31,6 +31,7 @@ namespace PaymentSystem.Application.Services
 
         public async Task AddTransactionAsync(Transaction transaction)
         {
+            // Check if the transaction has a reference to another transaction
             if (transaction.ReferencedTransactionId.HasValue)
             {
                 var referencedTransaction = await _transactionRepository.GetByIdAsync(transaction.ReferencedTransactionId.Value);
@@ -39,7 +40,45 @@ namespace PaymentSystem.Application.Services
                 {
                     transaction.Status = TransactionStatus.Error;
                 }
+                else
+                {
+                    // Handle different transaction types
+                    switch (transaction.TransactionType)
+                    {
+                        case TransactionType.Authorize:
+                            // No special handling required
+                            break;
+
+                        case TransactionType.Charge:
+                            if (referencedTransaction.TransactionType == TransactionType.Authorize)
+                            {
+                                transaction.Amount = referencedTransaction.Amount;
+                                referencedTransaction.Status = TransactionStatus.Approved;
+                            }
+                            break;
+
+                        case TransactionType.Refund:
+                            if (referencedTransaction.TransactionType == TransactionType.Charge && referencedTransaction.Status == TransactionStatus.Approved)
+                            {
+                                transaction.Amount = referencedTransaction.Amount;
+                                referencedTransaction.Status = TransactionStatus.Refunded;
+                            }
+                            break;
+
+                        case TransactionType.Reversal:
+                            if (referencedTransaction.TransactionType == TransactionType.Authorize)
+                            {
+                                transaction.Amount = 0;
+                                referencedTransaction.Status = TransactionStatus.Reversed;
+                            }
+                            break;
+
+                        default:
+                            throw new InvalidOperationException("Invalid transaction type.");
+                    }
+                }
             }
+
 
             await _transactionRepository.AddAsync(transaction);
             await _transactionRepository.SaveAsync();
