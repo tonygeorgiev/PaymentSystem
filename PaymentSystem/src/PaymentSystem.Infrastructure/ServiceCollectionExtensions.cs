@@ -12,9 +12,9 @@ namespace PaymentSystem.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var dbSetings = configuration.GetSection(nameof(DatabaseSettings)).Value;
+            var dbSetings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
             services.AddDbContext<PaymentSystemDbContext>(options =>
-                options.UseSqlServer(dbSetings));
+                options.UseSqlServer(dbSetings?.DefaultConnection));
             services.AddScoped<IMerchantRepository, MerchantRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
 
