@@ -31,4 +31,7 @@ public class Transaction : Entity<Guid>
 
     public int MerchantId { get; set; }
     public Merchant Merchant { get; set; }
+    public TransactionType TransactionType { get; set; }
+    public int? ReferencedTransactionId { get; set; }
+    public Transaction ReferencedTransaction { get; set; }
 }
