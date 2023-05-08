@@ -13,12 +13,14 @@ import { MerchantEditComponent } from './merchant-edit/merchant-edit.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { NavbarComponent } from './navbar/navbar.component';
 
 
 @NgModule({
@@ -27,7 +29,8 @@ import { MatCardModule } from '@angular/material/card';
     MerchantsComponent,
     MerchantEditComponent,
     TransactionsComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,7 @@ import { MatCardModule } from '@angular/material/card';
     MatDialogModule,
     FormsModule,
     MatTableModule,
-
+    MatToolbarModule,
     CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
