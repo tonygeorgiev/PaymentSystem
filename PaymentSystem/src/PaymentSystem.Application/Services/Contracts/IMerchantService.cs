@@ -15,5 +15,6 @@ namespace PaymentSystem.Application.Services.Contracts
         Task<Guid> AddMerchantAsync(MerchantCreateDto merchantCreateDto);
         Task UpdateMerchantAsync(Guid id, MerchantUpdateDto merchantUpdateDto);
         Task DeleteMerchantAsync(Merchant merchant);
+        Task CreateMerchantsFromCsvAsync(Stream stream);
     }
 }

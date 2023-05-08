@@ -1,7 +1,10 @@
 using PaymentSystem.Infrastructure;
 using PaymentSystem.Application;
 using Microsoft.AspNetCore.Hosting;
-
+using Hangfire;
+using Microsoft.Extensions.Configuration;
+using PaymentSystem.Application.Services.Contracts;
+using PaymentSystem.Infrastructure.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -26,6 +29,10 @@ services.AddCors(options =>
             .AllowAnyHeader();
         });
 });
+services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>().DefaultConnection);
+});
 
 var app = builder.Build();
 
@@ -35,6 +42,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseHangfireDashboard();
+app.UseHangfireServer();
 
 app.UseHttpsRedirection();
 
@@ -44,4 +53,11 @@ app.MapControllers();
 
 app.UseCors("AllowAllOrigins");
 
+using (var server = new BackgroundJobServer())
+{
+    RecurringJob.AddOrUpdate<ITransactionService>(
+        "DeleteOldTransactions",
+        service => service.DeleteOldTransactions(),
+        Cron.Hourly);
+}
 app.Run();

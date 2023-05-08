@@ -32,4 +32,5 @@ public class Transaction : Entity<Guid>
     public TransactionType TransactionType { get; set; }
     public Guid? ReferencedTransactionId { get; set; }
     public Transaction ReferencedTransaction { get; set; }
+    public DateTime Timestamp { get; set; }
 }

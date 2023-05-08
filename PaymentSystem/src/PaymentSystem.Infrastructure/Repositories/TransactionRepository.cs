@@ -20,6 +20,12 @@ public class TransactionRepository : Repository<Transaction>, ITransactionReposi
     }
     public async Task<bool> AnyAsync(Expression<Func<Transaction, bool>> predicate)
     {
-        return await context.Transactions.AnyAsync(predicate);
+        return await this.context.Transactions.AnyAsync(predicate);
     }
+    public async Task DeleteTransactionsOlderThan(DateTime dateTime)
+    {
+        await this.context.Transactions.Where(t => t.Timestamp < dateTime).ForEachAsync(t => this.context.Remove(t));
+        await this.context.SaveChangesAsync();
+    }
+
 }

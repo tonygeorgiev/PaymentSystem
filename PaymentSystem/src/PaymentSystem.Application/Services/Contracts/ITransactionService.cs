@@ -15,5 +15,6 @@ namespace PaymentSystem.Application.Services.Contracts
         Task<Guid> AddTransactionAsync(TransactionCreateDto transactionCreateDto);
         Task UpdateTransactionAsync(Guid id, TransactionUpdateDto transactionUpdateDto);
         Task DeleteTransactionAsync(Transaction transaction);
+        Task DeleteOldTransactions();
     }
 }

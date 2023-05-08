@@ -94,7 +94,7 @@ namespace PaymentSystem.Application.Services
                 }
             }
 
-
+            transaction.Timestamp = DateTime.UtcNow;
             await _transactionRepository.AddAsync(transaction);
             await _transactionRepository.SaveAsync();
 
@@ -122,6 +122,12 @@ namespace PaymentSystem.Application.Services
         {
             _transactionRepository.Delete(transaction);
             await _transactionRepository.SaveAsync();
+        }
+
+        public async Task DeleteOldTransactions()
+        {
+            var dateTime = DateTime.UtcNow.AddHours(-1);
+            await _transactionRepository.DeleteTransactionsOlderThan(dateTime);
         }
     }
 }

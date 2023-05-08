@@ -68,6 +68,12 @@ namespace PaymentSystem.API.Controllers
             await _transactionService.DeleteTransactionAsync(transaction);
             return NoContent();
         }
-    }
 
+        [HttpPost("delete-old-transactions")]
+        public async Task<ActionResult> DeleteOldTransactions()
+        {
+            await _transactionService.DeleteOldTransactions();
+            return Ok();
+        }
+    }
 }

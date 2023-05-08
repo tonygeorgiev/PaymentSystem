@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using CsvHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PaymentSystem.API.Models;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
+using System.Formats.Asn1;
+using System.Globalization;
 
 namespace PaymentSystem.API.Controllers
 {
@@ -68,7 +72,18 @@ namespace PaymentSystem.API.Controllers
             await _merchantService.DeleteMerchantAsync(merchant);
             return NoContent();
         }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportMerchantsCSV(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file provided");
+            }
+            
+            await _merchantService.CreateMerchantsFromCsvAsync(file.OpenReadStream());
+
+            return Ok();
+        }
     }
-
-
 }

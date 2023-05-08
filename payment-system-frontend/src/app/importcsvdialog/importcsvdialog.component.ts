@@ -31,7 +31,7 @@ export class ImportcsvdialogComponent implements OnInit {
   onUpload() {
     const formData = new FormData();
     formData.append('file', this.file);
-    this.http.post('/api/merchants/import', formData)
+    this.http.post('https://localhost:7208/api/merchant/import', formData)
       .subscribe(() => this.dialogRef.close());
   }
 

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CsvHelper;
+using Microsoft.EntityFrameworkCore;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
@@ -6,6 +8,8 @@ using PaymentSystem.Infrastructure.Repositories;
 using PaymentSystem.Infrastructure.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,6 +77,35 @@ namespace PaymentSystem.Application.Services
             }
 
             _merchantRepository.Delete(merchant);
+            await _merchantRepository.SaveAsync();
+        }
+
+        public async Task CreateMerchantsFromCsvAsync(Stream stream)
+        {
+            try
+            {
+                using var reader = new StreamReader(stream);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+                var records = csv.GetRecords<MerchantCreateDto>();
+
+                foreach (var record in records)
+                {
+                    var merchant = new Merchant
+                    {
+                        Name = record.Name,
+                        Description = record.Description,
+                        Email = record.Email,
+                        IsActive = record.IsActive
+                    };
+                    await _merchantRepository.AddAsync(merchant);
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
             await _merchantRepository.SaveAsync();
         }
     }
