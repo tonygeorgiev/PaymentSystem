@@ -1,0 +1,42 @@
+<div class="container">
+    <h2 class="mat-display-3">Merchants</h2>
+    <mat-table [dataSource]="merchants" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let merchant">{{ merchant.id }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let merchant">{{ merchant.name }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let merchant">{{ merchant.description }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let merchant">{{ merchant.email }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let merchant">{{ merchant.isActive ? 'Active' : 'Inactive' }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let merchant">
+          <button mat-raised-button color="primary" (click)="onEditMerchant(merchant.id)">Edit</button>
+          <button mat-raised-button color="warn" (click)="onDeleteMerchant(merchant.id)">Delete</button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+  </div>
+  

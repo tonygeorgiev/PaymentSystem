@@ -15,6 +15,17 @@ services.AddSwaggerGen();
 services.AddInfrastructure(configuration);
 services.AddApplication();
 services.AddAutoMapper(typeof(Program));
+services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -30,5 +41,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("AllowAllOrigins");
 
 app.Run();
