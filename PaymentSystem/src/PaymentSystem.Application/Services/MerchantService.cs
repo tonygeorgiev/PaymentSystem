@@ -35,12 +35,14 @@ namespace PaymentSystem.Application.Services
             return await _merchantRepository.GetByIdAsync(id);
         }
 
-        public async Task AddMerchantAsync(MerchantCreateDto merchantCreateDto)
+        public async Task<Guid> AddMerchantAsync(MerchantCreateDto merchantCreateDto)
         {
             var merchant = _mapper.Map<Merchant>(merchantCreateDto);
 
             await _merchantRepository.AddAsync(merchant);
             await _merchantRepository.SaveAsync();
+
+            return merchant.Id;
         }
 
         public async Task UpdateMerchantAsync(Guid id, MerchantUpdateDto merchantUpdateDto)

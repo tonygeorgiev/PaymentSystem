@@ -44,8 +44,8 @@ namespace PaymentSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] MerchantCreateModel merchant)
         {
-            await _merchantService.AddMerchantAsync(_mapper.Map<MerchantCreateDto>(merchant));
-            return Ok();
+            var id = await _merchantService.AddMerchantAsync(_mapper.Map<MerchantCreateDto>(merchant));
+            return CreatedAtAction(nameof(GetById), new { id = id}, merchant);
         }
 
         [HttpPut("{id}")]

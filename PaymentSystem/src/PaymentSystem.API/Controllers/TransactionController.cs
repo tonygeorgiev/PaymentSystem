@@ -44,8 +44,8 @@ namespace PaymentSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TransactionCreateModel transaction)
         {
-            await _transactionService.AddTransactionAsync(_mapper.Map<TransactionCreateDto>(transaction));
-            return Ok();
+            var id = await _transactionService.AddTransactionAsync(_mapper.Map<TransactionCreateDto>(transaction));
+            return CreatedAtAction(nameof(GetById), new { id = id }, transaction);
         }
 
         [HttpPut("{id}")]

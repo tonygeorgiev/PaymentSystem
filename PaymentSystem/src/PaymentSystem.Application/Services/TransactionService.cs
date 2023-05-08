@@ -35,7 +35,7 @@ namespace PaymentSystem.Application.Services
         {
             return await _transactionRepository.GetByIdAsync(id);
         }
-        public async Task AddTransactionAsync(TransactionCreateDto transactionCreateDto)
+        public async Task<Guid> AddTransactionAsync(TransactionCreateDto transactionCreateDto)
         {
             var merchant = await _merchantRepository.GetByIdAsync(transactionCreateDto.MerchantId);
 
@@ -97,6 +97,8 @@ namespace PaymentSystem.Application.Services
 
             await _transactionRepository.AddAsync(transaction);
             await _transactionRepository.SaveAsync();
+
+            return transaction.Id;
         }
 
         public async Task UpdateTransactionAsync(Guid id, TransactionUpdateDto transactionUpdateDto)

@@ -12,7 +12,7 @@ namespace PaymentSystem.Application.Services.Contracts
     {
         Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
         Task<Transaction> GetTransactionByIdAsync(Guid guid);
-        Task AddTransactionAsync(TransactionCreateDto transactionCreateDto);
+        Task<Guid> AddTransactionAsync(TransactionCreateDto transactionCreateDto);
         Task UpdateTransactionAsync(Guid id, TransactionUpdateDto transactionUpdateDto);
         Task DeleteTransactionAsync(Transaction transaction);
     }

@@ -12,7 +12,7 @@ namespace PaymentSystem.Application.Services.Contracts
     {
         Task<IEnumerable<Merchant>> GetAllMerchantsAsync();
         Task<Merchant> GetMerchantByIdAsync(Guid id);
-        Task AddMerchantAsync(MerchantCreateDto merchantCreateDto);
+        Task<Guid> AddMerchantAsync(MerchantCreateDto merchantCreateDto);
         Task UpdateMerchantAsync(Guid id, MerchantUpdateDto merchantUpdateDto);
         Task DeleteMerchantAsync(Merchant merchant);
     }
