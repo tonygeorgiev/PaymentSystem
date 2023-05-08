@@ -1,5 +1,8 @@
-﻿using PaymentSystem.Application.Services.Contracts;
+﻿using AutoMapper;
+using PaymentSystem.Application.DTOs;
+using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
+using PaymentSystem.Infrastructure.Repositories;
 using PaymentSystem.Infrastructure.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
@@ -13,10 +16,14 @@ namespace PaymentSystem.Application.Services
     {
 
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IMerchantRepository _merchantRepository;
+        private readonly IMapper _mapper;
 
-        public TransactionService(ITransactionRepository transactionRepository)
+        public TransactionService(ITransactionRepository transactionRepository, IMerchantRepository merchantRepository, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
+            _merchantRepository = merchantRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Transaction>> GetAllTransactionsAsync()
@@ -28,9 +35,17 @@ namespace PaymentSystem.Application.Services
         {
             return await _transactionRepository.GetByIdAsync(id);
         }
-
-        public async Task AddTransactionAsync(Transaction transaction)
+        public async Task AddTransactionAsync(TransactionCreateDto transactionCreateDto)
         {
+            var merchant = await _merchantRepository.GetByIdAsync(transactionCreateDto.MerchantId);
+
+            if (merchant == null)
+            {
+                throw new ArgumentException($"Merchant with ID {transactionCreateDto.MerchantId} not found.");
+            }
+
+            var transaction = _mapper.Map<Transaction>(transactionCreateDto);
+
             // Check if the transaction has a reference to another transaction
             if (transaction.ReferencedTransactionId.HasValue)
             {
@@ -84,8 +99,19 @@ namespace PaymentSystem.Application.Services
             await _transactionRepository.SaveAsync();
         }
 
-        public async Task UpdateTransactionAsync(Transaction transaction)
+        public async Task UpdateTransactionAsync(Guid id, TransactionUpdateDto transactionUpdateDto)
         {
+            var transaction = await _transactionRepository.GetByIdAsync(id);
+
+            if (transaction == null)
+            {
+                throw new ArgumentException($"Transaction with ID {id} not found.");
+            }
+
+            transaction.Amount = transactionUpdateDto.Amount;
+            transaction.CustomerEmail = transactionUpdateDto.CustomerEmail;
+            transaction.CustomerPhone = transactionUpdateDto.CustomerPhone;
+
             _transactionRepository.Update(transaction);
             await _transactionRepository.SaveAsync();
         }

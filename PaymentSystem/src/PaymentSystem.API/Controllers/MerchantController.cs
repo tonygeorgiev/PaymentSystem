@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PaymentSystem.API.Models;
+using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
 
@@ -10,10 +13,12 @@ namespace PaymentSystem.API.Controllers
     public class MerchantController : ControllerBase
     {
         private readonly IMerchantService _merchantService;
+        private readonly IMapper _mapper;
 
-        public MerchantController(IMerchantService merchantService)
+        public MerchantController(IMerchantService merchantService, IMapper mapper)
         {
             _merchantService = merchantService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -37,21 +42,16 @@ namespace PaymentSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Merchant merchant)
+        public async Task<IActionResult> Create([FromBody] MerchantCreateModel merchant)
         {
-            await _merchantService.AddMerchantAsync(merchant);
-            return CreatedAtAction(nameof(GetById), new { id = merchant.Id }, merchant);
+            await _merchantService.AddMerchantAsync(_mapper.Map<MerchantCreateDto>(merchant));
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] Merchant merchant)
+        public async Task<IActionResult> Update(Guid id, [FromBody] MerchantUpdateModel merchant)
         {
-            if (id != merchant.Id)
-            {
-                return BadRequest();
-            }
-
-            await _merchantService.UpdateMerchantAsync(merchant);
+            await _merchantService.UpdateMerchantAsync(id, _mapper.Map<MerchantUpdateDto>(merchant));
             return NoContent();
         }
 

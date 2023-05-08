@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PaymentSystem.API.Models;
+using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
 
@@ -10,10 +13,12 @@ namespace PaymentSystem.API.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
+        private readonly IMapper _mapper;
 
-        public TransactionController(ITransactionService transactionService)
+        public TransactionController(ITransactionService transactionService, IMapper mapper)
         {
             _transactionService = transactionService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -37,21 +42,16 @@ namespace PaymentSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Transaction transaction)
+        public async Task<IActionResult> Create([FromBody] TransactionCreateModel transaction)
         {
-            await _transactionService.AddTransactionAsync(transaction);
-            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
+            await _transactionService.AddTransactionAsync(_mapper.Map<TransactionCreateDto>(transaction));
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] Transaction transaction)
+        public async Task<IActionResult> Update(Guid id, [FromBody] TransactionUpdateModel transaction)
         {
-            if (id != transaction.Id)
-            {
-                return BadRequest();
-            }
-
-            await _transactionService.UpdateTransactionAsync(transaction);
+            await _transactionService.UpdateTransactionAsync(id, _mapper.Map<TransactionUpdateDto>(transaction));
             return NoContent();
         }
 

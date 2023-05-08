@@ -1,4 +1,6 @@
-﻿using PaymentSystem.Application.Services.Contracts;
+﻿using AutoMapper;
+using PaymentSystem.Application.DTOs;
+using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
 using PaymentSystem.Infrastructure.Repositories;
 using PaymentSystem.Infrastructure.Repositories.Contracts;
@@ -14,11 +16,13 @@ namespace PaymentSystem.Application.Services
     {
         private readonly IMerchantRepository _merchantRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IMapper _mapper;
 
-        public MerchantService(IMerchantRepository merchantRepository, ITransactionRepository transactionRepository)
+        public MerchantService(IMerchantRepository merchantRepository, ITransactionRepository transactionRepository, IMapper mapper)
         {
             _merchantRepository = merchantRepository;
             _transactionRepository = transactionRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Merchant>> GetAllMerchantsAsync()
@@ -31,14 +35,28 @@ namespace PaymentSystem.Application.Services
             return await _merchantRepository.GetByIdAsync(id);
         }
 
-        public async Task AddMerchantAsync(Merchant merchant)
+        public async Task AddMerchantAsync(MerchantCreateDto merchantCreateDto)
         {
+            var merchant = _mapper.Map<Merchant>(merchantCreateDto);
+
             await _merchantRepository.AddAsync(merchant);
             await _merchantRepository.SaveAsync();
         }
 
-        public async Task UpdateMerchantAsync(Merchant merchant)
+        public async Task UpdateMerchantAsync(Guid id, MerchantUpdateDto merchantUpdateDto)
         {
+            var merchant = await _merchantRepository.GetByIdAsync(id);
+
+            if (merchant == null)
+            {
+                throw new ArgumentException($"Merchant with ID {id} not found.");
+            }
+
+            merchant.Name = merchantUpdateDto.Name;
+            merchant.Description = merchantUpdateDto.Description;
+            merchant.Email = merchantUpdateDto.Email;
+            merchant.IsActive = merchantUpdateDto.IsActive;
+
             _merchantRepository.Update(merchant);
             await _merchantRepository.SaveAsync();
         }

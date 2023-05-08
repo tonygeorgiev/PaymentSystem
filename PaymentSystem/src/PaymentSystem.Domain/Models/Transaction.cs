@@ -15,9 +15,6 @@ public class Transaction : Entity<Guid>
         this.Id = Guid.NewGuid();
     }
 
-    [Required]
-    public Guid TransactionGuid { get; set; }
-
     [Required, Range(0.01, double.MaxValue)]
     public decimal Amount { get; set; }
 
@@ -27,6 +24,7 @@ public class Transaction : Entity<Guid>
     public string CustomerEmail { get; set; }
 
     [Required, MaxLength(20)]
+    [Phone]
     public string CustomerPhone { get; set; }
 
     public Guid MerchantId { get; set; }

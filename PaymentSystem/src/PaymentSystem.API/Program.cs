@@ -1,5 +1,6 @@
 using PaymentSystem.Infrastructure;
 using PaymentSystem.Application;
+using Microsoft.AspNetCore.Hosting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddInfrastructure(configuration);
 services.AddApplication();
+services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

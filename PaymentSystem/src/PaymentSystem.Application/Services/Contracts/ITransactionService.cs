@@ -1,4 +1,5 @@
-﻿using PaymentSystem.Domain.Models;
+﻿using PaymentSystem.Application.DTOs;
+using PaymentSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace PaymentSystem.Application.Services.Contracts
     {
         Task<IEnumerable<Transaction>> GetAllTransactionsAsync();
         Task<Transaction> GetTransactionByIdAsync(Guid guid);
-        Task AddTransactionAsync(Transaction transaction);
-        Task UpdateTransactionAsync(Transaction transaction);
+        Task AddTransactionAsync(TransactionCreateDto transactionCreateDto);
+        Task UpdateTransactionAsync(Guid id, TransactionUpdateDto transactionUpdateDto);
         Task DeleteTransactionAsync(Transaction transaction);
     }
 }

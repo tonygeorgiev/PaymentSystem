@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PaymentSystem.Domain\PaymentSystem.Domain.csproj" />
     <ProjectReference Include="..\PaymentSystem.Infrastructure\PaymentSystem.Infrastructure.csproj" />
   </ItemGroup>

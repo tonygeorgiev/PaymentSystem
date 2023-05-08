@@ -1,4 +1,5 @@
-﻿using PaymentSystem.Domain.Models;
+﻿using PaymentSystem.Application.DTOs;
+using PaymentSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,8 @@ namespace PaymentSystem.Application.Services.Contracts
     {
         Task<IEnumerable<Merchant>> GetAllMerchantsAsync();
         Task<Merchant> GetMerchantByIdAsync(Guid id);
-        Task AddMerchantAsync(Merchant merchant);
-        Task UpdateMerchantAsync(Merchant merchant);
+        Task AddMerchantAsync(MerchantCreateDto merchantCreateDto);
+        Task UpdateMerchantAsync(Guid id, MerchantUpdateDto merchantUpdateDto);
         Task DeleteMerchantAsync(Merchant merchant);
     }
 }
