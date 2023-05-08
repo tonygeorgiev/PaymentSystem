@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-
+import { ImportcsvdialogComponent } from '../importcsvdialog/importcsvdialog.component';
 @Component({
   selector: 'app-merchants',
   templateUrl: './merchants.component.html',
@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class MerchantsComponent implements OnInit {
   merchants: any[] = [];
   displayedColumns: string[] = ['id', 'name', 'description', 'email', 'isActive', 'actions'];
+  selectedFile: File | null = null;
   constructor(private merchantService: MerchantService, private router: Router, private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -48,6 +49,29 @@ export class MerchantsComponent implements OnInit {
         } catch (error) {
           this.snackBar.open('Error deleting merchant', 'Close', { duration: 3000 });
         }
+      }
+    });
+  }
+
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+  }
+
+  onUpload(): void {
+    const formData = new FormData();
+    formData.append('file', this.selectedFile!, this.selectedFile!.name);
+
+    const dialogRef = this.dialog.open(ImportcsvdialogComponent, {
+      width: '500px',
+      data: { formData: formData },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.merchantService.importMerchantsCSV(formData).subscribe(() => {
+          this.fetchMerchants();
+        });
       }
     });
   }

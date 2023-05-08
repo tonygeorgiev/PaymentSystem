@@ -27,4 +27,8 @@ export class MerchantService {
     return this.http.delete<void>(`${this.apiUrl}/merchant/${merchantId}`);
   }
 
+  importMerchantsCSV(file: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/merchant/import`, file);
+  }
+
 }
