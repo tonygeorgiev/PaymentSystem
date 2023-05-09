@@ -3,6 +3,7 @@ using CsvHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PaymentSystem.API.Common.Exceotions;
 using PaymentSystem.API.Models;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
@@ -17,11 +18,16 @@ namespace PaymentSystem.API.Controllers
     public class MerchantController : ControllerBase
     {
         private readonly IMerchantService _merchantService;
+        private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
 
-        public MerchantController(IMerchantService merchantService, IMapper mapper)
+        public MerchantController(
+            IMerchantService merchantService, 
+            ITransactionService transactionService,
+            IMapper mapper)
         {
             _merchantService = merchantService;
+            _transactionService = transactionService;
             _mapper = mapper;
         }
 
@@ -39,7 +45,7 @@ namespace PaymentSystem.API.Controllers
 
             if (merchant == null)
             {
-                return NotFound();
+                throw new NotFoundException($"Merchant with Id: {id} was not found.");
             }
 
             return Ok(merchant);
@@ -66,7 +72,7 @@ namespace PaymentSystem.API.Controllers
 
             if (merchant == null)
             {
-                return NotFound();
+                throw new NotFoundException($"Merchant with Id: {id} was not found.");
             }
 
             await _merchantService.DeleteMerchantAsync(merchant);
@@ -82,6 +88,28 @@ namespace PaymentSystem.API.Controllers
             }
             
             await _merchantService.CreateMerchantsFromCsvAsync(file.OpenReadStream());
+
+            return Ok();
+        }
+
+        [HttpPost("{merchantId}/payments")]
+        public async Task<IActionResult> ProcessPayment(Guid merchantId, [FromBody] PaymentModel paymentModel)
+        {
+            var merchant = await _merchantService.GetMerchantByIdAsync(merchantId);
+
+            if (merchant == null)
+            {
+                throw new NotFoundException($"Merchant with Id: {merchantId} was not found.");
+            }
+
+            if (!merchant.IsActive)
+            {
+                return BadRequest("Merchant is not active");
+            }
+
+            var transactionDto = _mapper.Map<TransactionCreateDto>(paymentModel);
+            transactionDto.TransactionType = TransactionType.Charge;
+            await _transactionService.AddTransactionAsync(transactionDto);
 
             return Ok();
         }

@@ -13,6 +13,7 @@ public class Transaction : Entity<Guid>
     public Transaction()
     {
         this.Id = Guid.NewGuid();
+        this.Timestamp = DateTime.UtcNow;
     }
 
     [Required, Range(0.01, double.MaxValue)]

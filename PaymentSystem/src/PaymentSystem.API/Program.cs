@@ -5,6 +5,7 @@ using Hangfire;
 using Microsoft.Extensions.Configuration;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Infrastructure.Options;
+using PaymentSystem.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -35,6 +36,8 @@ services.AddHangfire(config =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

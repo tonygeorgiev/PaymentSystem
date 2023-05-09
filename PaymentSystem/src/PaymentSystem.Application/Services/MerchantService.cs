@@ -2,6 +2,7 @@
 using CsvHelper;
 using Microsoft.EntityFrameworkCore;
 using PaymentSystem.Application.DTOs;
+using PaymentSystem.Application.Exceptions;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
 using PaymentSystem.Infrastructure.Repositories;
@@ -55,7 +56,7 @@ namespace PaymentSystem.Application.Services
 
             if (merchant == null)
             {
-                throw new ArgumentException($"Merchant with ID {id} not found.");
+                throw new EntityNotFoundException($"Merchant with ID {id} not found.");
             }
 
             merchant.Name = merchantUpdateDto.Name;
@@ -82,30 +83,23 @@ namespace PaymentSystem.Application.Services
 
         public async Task CreateMerchantsFromCsvAsync(Stream stream)
         {
-            try
+            using var reader = new StreamReader(stream);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            
+            var records = csv.GetRecords<MerchantCreateDto>();
+            
+            foreach (var record in records)
             {
-                using var reader = new StreamReader(stream);
-                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-                var records = csv.GetRecords<MerchantCreateDto>();
-
-                foreach (var record in records)
+                var merchant = new Merchant
                 {
-                    var merchant = new Merchant
-                    {
-                        Name = record.Name,
-                        Description = record.Description,
-                        Email = record.Email,
-                        IsActive = record.IsActive
-                    };
-                    await _merchantRepository.AddAsync(merchant);
-                }
+                    Name = record.Name,
+                    Description = record.Description,
+                    Email = record.Email,
+                    IsActive = record.IsActive
+                };
+                await _merchantRepository.AddAsync(merchant);
+            }
 
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
             await _merchantRepository.SaveAsync();
         }
     }

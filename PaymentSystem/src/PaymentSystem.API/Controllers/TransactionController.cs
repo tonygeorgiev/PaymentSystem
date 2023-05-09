@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PaymentSystem.API.Common.Exceotions;
 using PaymentSystem.API.Models;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
@@ -35,7 +36,7 @@ namespace PaymentSystem.API.Controllers
 
             if (transaction == null)
             {
-                return NotFound();
+                throw new NotFoundException($"Transaction with Id: {id} was not found.");
             }
 
             return Ok(transaction);
@@ -62,7 +63,7 @@ namespace PaymentSystem.API.Controllers
 
             if (transaction == null)
             {
-                return NotFound();
+                throw new NotFoundException($"Transaction with Id: {id} was not found.");
             }
 
             await _transactionService.DeleteTransactionAsync(transaction);

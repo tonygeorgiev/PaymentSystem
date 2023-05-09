@@ -13,12 +13,14 @@ namespace PaymentSystem.API.Common
                 .ReverseMap();
             CreateMap<MerchantUpdateModel, MerchantUpdateDto>()
                 .ReverseMap();
-
-            CreateMap<MerchantCreateDto, Merchant>();
-            CreateMap<MerchantUpdateDto, Merchant>();
-
-
-            CreateMap<TransactionCreateDto, Transaction>();
+            CreateMap<MerchantCreateDto, Merchant>()
+                .ReverseMap();
+            CreateMap<MerchantUpdateDto, Merchant>()
+                .ReverseMap();
+            CreateMap<TransactionCreateDto, Transaction>()
+                .ReverseMap();
+            CreateMap<PaymentModel, TransactionCreateDto>()
+                .ReverseMap();
             CreateMap<TransactionCreateModel, TransactionCreateDto>()
                 .ReverseMap();
             CreateMap<TransactionUpdateModel, TransactionUpdateDto>().

@@ -27,8 +27,37 @@ namespace PaymentSystem.Domain.Models
 
         public bool IsActive { get; set; }
 
-        public decimal TotalTransactionSum { get; set; }
+        public decimal TotalTransactionSum 
+        { 
+            get
+            {
+                return this.GetTotalTransactionSum();
+            }
+            set
+            {
+                this.TotalTransactionSum = value;
+            }
+        }
 
         public ICollection<Transaction> Transactions { get; set; }
+
+        public decimal GetApprovedChargeTransactionSum()
+        {
+            return Transactions
+                .Where(t => t.Status == TransactionStatus.Approved && t.TransactionType == TransactionType.Charge)
+                .Sum(t => t.Amount);
+        }
+
+        public decimal GetApprovedRefundTransactionSum()
+        {
+            return Transactions
+                .Where(t => t.Status == TransactionStatus.Approved && t.TransactionType == TransactionType.Refund)
+                .Sum(t => t.Amount);
+        }
+
+        public decimal GetTotalTransactionSum()
+        {
+            return GetApprovedChargeTransactionSum() - GetApprovedRefundTransactionSum();
+        }
     }
 }

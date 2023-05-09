@@ -3,12 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PaymentSystem.API.Models
 {
-    public class TransactionCreateModel
+    public class PaymentModel
     {
-        [Required]
-        public Guid MerchantId { get; set; }
-        public Guid? ReferencedTransactionId { get; set; }
-
         [Required, Range(0.01, double.MaxValue)]
         public decimal Amount { get; set; }
 
@@ -20,8 +16,7 @@ namespace PaymentSystem.API.Models
         public string CustomerPhone { get; set; }
 
         [Required]
-        public TransactionType TransactionType { get; set; }
-        [Required]
-        public TransactionStatus TransactionStatus { get; set; }
+        public Guid MerchantId { get; set; }
+
     }
 }
