@@ -1,10 +1,5 @@
 ﻿using PaymentSystem.Application.DTOs;
 using PaymentSystem.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaymentSystem.Application.Services.Contracts
 {

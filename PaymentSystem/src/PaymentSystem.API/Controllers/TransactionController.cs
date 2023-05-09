@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PaymentSystem.API.Common.Exceotions;
 using PaymentSystem.API.Models;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
-using PaymentSystem.Domain.Models;
 
 namespace PaymentSystem.API.Controllers
 {

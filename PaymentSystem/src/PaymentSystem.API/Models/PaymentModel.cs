@@ -1,5 +1,4 @@
-﻿using PaymentSystem.Domain.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PaymentSystem.API.Models
 {

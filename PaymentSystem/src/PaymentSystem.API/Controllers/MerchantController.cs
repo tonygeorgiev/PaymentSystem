@@ -1,15 +1,10 @@
 ﻿using AutoMapper;
-using CsvHelper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PaymentSystem.API.Common.Exceotions;
 using PaymentSystem.API.Models;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
-using System.Formats.Asn1;
-using System.Globalization;
 
 namespace PaymentSystem.API.Controllers
 {

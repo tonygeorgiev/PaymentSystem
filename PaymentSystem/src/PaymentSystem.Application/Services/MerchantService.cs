@@ -1,19 +1,11 @@
 ﻿using AutoMapper;
 using CsvHelper;
-using Microsoft.EntityFrameworkCore;
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Exceptions;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
-using PaymentSystem.Infrastructure.Repositories;
 using PaymentSystem.Infrastructure.Repositories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaymentSystem.Application.Services
 {

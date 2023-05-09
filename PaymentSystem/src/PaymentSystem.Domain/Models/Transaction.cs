@@ -1,11 +1,5 @@
 ﻿using PaymentSystem.Domain.Models.Base;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace PaymentSystem.Domain.Models;
 public class Transaction : Entity<Guid>

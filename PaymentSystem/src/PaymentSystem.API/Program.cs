@@ -1,8 +1,6 @@
 using PaymentSystem.Infrastructure;
 using PaymentSystem.Application;
-using Microsoft.AspNetCore.Hosting;
 using Hangfire;
-using Microsoft.Extensions.Configuration;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Infrastructure.Options;
 using PaymentSystem.API.Middleware;

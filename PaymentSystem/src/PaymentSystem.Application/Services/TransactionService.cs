@@ -2,13 +2,7 @@
 using PaymentSystem.Application.DTOs;
 using PaymentSystem.Application.Services.Contracts;
 using PaymentSystem.Domain.Models;
-using PaymentSystem.Infrastructure.Repositories;
 using PaymentSystem.Infrastructure.Repositories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PaymentSystem.Application.Services
 {
